@@ -1,2 +1,2 @@
 # conwayPy
-Conway's Game of Live in Python
+Conway's game of live in Python.
