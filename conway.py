@@ -74,16 +74,16 @@ class Conway:
 						[
 							choice(
 								[
-									Conway.LIVE,
-									Conway.DEAD,
-									Conway.DEAD,
-									Conway.DEAD,
-									Conway.DEAD,
-									Conway.DEAD,
-									Conway.DEAD,
-									Conway.DEAD,
-									Conway.DEAD,
-									Conway.DEAD
+									Conway.LIVE
+									,Conway.DEAD
+									,Conway.DEAD
+									,Conway.DEAD
+									,Conway.DEAD
+									#,Conway.DEAD
+									#,Conway.DEAD
+									#,Conway.DEAD
+									#,Conway.DEAD
+									#,Conway.DEAD
 								]
 							) for x in range(self.maxRows * self.maxColumns)
 						],
