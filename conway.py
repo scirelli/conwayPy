@@ -3,6 +3,13 @@ from random import randint, choice
 from time import sleep
 
 class Conway:
+	"""
+	Rules to Conway's Game of Life
+	1. Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
+	2. Any live cell with two or three live neighbours lives on to the next generation.
+	3. Any live cell with more than three live neighbours dies, as if by overpopulation.
+	4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+	"""
 	LIVE = 1
 	DEAD = 0
 	UNDERPOPULATION = 2 * LIVE
@@ -10,11 +17,87 @@ class Conway:
 	REPRODUCTION = 3 * LIVE
 	DRAW_BOARD = 0
 	BUFFER_BOARD = 1
+	TEST_ROWS = 9
+	TEST_COLUMNS = 9
+
+	PATTERNS = [
+		[
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0
+		],
+		[
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,1,1,1,0,0,0,
+			0,0,0,1,1,1,0,0,0,
+			0,0,0,1,1,1,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0
+		],
+		[
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,1,
+			0,0,0,0,0,0,0,0,1,
+			0,0,0,0,0,0,0,0,1,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0
+		],
+		[
+			1,1,1,1,1,1,1,1,1,
+			1,0,0,0,0,0,0,0,1,
+			1,0,0,0,0,0,0,0,1,
+			1,0,0,0,0,0,0,0,1,
+			1,0,0,0,0,0,0,0,1,
+			1,0,0,0,0,0,0,0,1,
+			1,0,0,0,0,0,0,0,1,
+			1,0,0,0,0,0,0,0,1,
+			1,1,1,1,1,1,1,1,1
+		]
+	]
 
 	def __init__(self, maxColumns, maxRows):
 		self.maxColumns = maxColumns
 		self.maxRows = maxRows
-		self.boards = [[choice([Conway.DEAD,Conway.LIVE,Conway.DEAD,Conway.DEAD,Conway.DEAD,Conway.DEAD,Conway.DEAD]) for x in range(self.maxRows * self.maxColumns)]] * 2
+		self.boards = [
+						[
+							choice(
+								[
+									Conway.LIVE,
+									Conway.DEAD,
+									Conway.DEAD,
+									Conway.DEAD,
+									Conway.DEAD,
+									Conway.DEAD,
+									Conway.DEAD,
+									Conway.DEAD,
+									Conway.DEAD,
+									Conway.DEAD
+								]
+							) for x in range(self.maxRows * self.maxColumns)
+						],
+						[0 for x in range(self.maxRows * self.maxColumns)]
+					  ] # * 2
+	
+	def test(self):
+		"A simple board to test with."
+
+		self.maxColumns = Conway.TEST_COLUMNS
+		self.maxRows = Conway.TEST_ROWS
+		
+		self.boards[Conway.DRAW_BOARD] = Conway.PATTERNS[3]
+		self.boards[Conway.BUFFER_BOARD] = Conway.PATTERNS[0]
 
 	def swap(self):
 		"Swap the two self.boards in the array. So the buffer becoems the board you draw. And the the baord you draw becomes the buffer."

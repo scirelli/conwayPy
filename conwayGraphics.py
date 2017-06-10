@@ -21,6 +21,12 @@ screen = pygame.display.set_mode(SCREEN_SIZE)
 pygame.display.set_caption("Conway's Game of Life")
 conwayGame = Conway(COLUMNS, ROWS)
 
+# conwayGame.test()
+# CELL_WIDTH   = int(SCREEN_SIZE[0]/Conway.TEST_COLUMNS)
+# CELL_HEIGHT  = int(SCREEN_SIZE[1]/Conway.TEST_ROWS)
+# ROWS         = Conway.TEST_ROWS
+# COLUMNS      = Conway.TEST_COLUMNS
+
 # Loop until the user clicks the close button.
 done = False
  
@@ -86,4 +92,4 @@ while not done:
 	screen.fill(BLACK)
 
 	# --- Limit to 60 frames per second
-	clock.tick(10)
+	clock.tick(15)
