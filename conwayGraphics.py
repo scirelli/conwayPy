@@ -8,8 +8,13 @@ RED      = ( 255,   0,   0)
 GREEN    = (   0, 255,   0)
 BLUE     = (   0,   0, 255)
 
-size = (700, 500)
-screen = pygame.display.set_mode(size)
+SCREEN_SIZE	 = (700, 500)
+CELL_WIDTH   = 5
+CELL_HEIZGHT = 5
+ROWS         = SCREEN_SIZE[0]/CELL_WIDTH
+COLUMNS      = SCREEN_SIZE[1]/CELL_HEIZGHT
+
+screen = pygame.display.set_mode(SCREEN_SIZE)
 pygame.display.set_caption("Conway's Game of Life")
 
 # Loop until the user clicks the close button.
@@ -28,10 +33,11 @@ while not done:
     # --- Game logic should go here
  
     # --- Drawing code should go here
- 
+	drawGrid(screen) 
+
     # First, clear the screen to white. Don't put other drawing commands
     # above this, or they will be erased with this command.
-    screen.fill(WHITE)
+    screen.fill(BLACK)
  
     # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
