@@ -2,113 +2,74 @@
 from random import randint, choice
 from time import sleep
 
-LIVE = 1
-DEAD = 0
-UNDERPOPULATION = 2 * LIVE
-OVERPOPULATION = 3 * LIVE
-REPRODUCTION = 3 * LIVE
-MAX_ROWS = 40
-MAX_COLUMNS = 80
-DRAW_BOARD = 0
-BUFFER_BOARD = 1
+class Conway:
+	LIVE = 1
+	DEAD = 0
+	UNDERPOPULATION = 2 * LIVE
+	OVERPOPULATION = 3 * LIVE
+	REPRODUCTION = 3 * LIVE
+	DRAW_BOARD = 0
+	BUFFER_BOARD = 1
 
-boards = [[randint(DEAD, LIVE) for x in range(MAX_ROWS * MAX_COLUMNS)]] * 2
-boards = [[choice([DEAD,LIVE,DEAD,DEAD,DEAD,DEAD,DEAD]) for x in range(MAX_ROWS * MAX_COLUMNS)]] * 2
-MAX_ROWS = 9
-MAX_COLUMNS = 9 
-boards[DRAW_BOARD] = [
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,1,1,1,0,0,0,
-	0,0,0,1,1,1,0,0,0,
-	0,0,0,1,1,1,0,0,0,
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0
-]
-boards[BUFFER_BOARD] = [
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0
-]
+	def __init__(self, maxColumns, maxRows):
+		self.maxRows = maxRows
+		self.maxColumns = maxColumns
+		self.boards = [[choice([DEAD,LIVE,DEAD,DEAD,DEAD,DEAD,DEAD]) for x in range(self.maxRows * self.maxColumns)]] * 2
 
-def swap():
-	"Swap the two boards in the array. So the buffer becoems the board you draw. And the the baord you draw becomes the buffer."
-	global boards
-	tmp = boards[DRAW_BOARD]
-	boards[DRAW_BOARD] = boards[BUFFER_BOARD]
-	boards[BUFFER_BOARD] = tmp
+	def swap(self):
+		"Swap the two self.boards in the array. So the buffer becoems the board you draw. And the the baord you draw becomes the buffer."
+		tmp = self.boards[DRAW_BOARD]
+		self.boards[DRAW_BOARD] = self.boards[BUFFER_BOARD]
+		self.boards[BUFFER_BOARD] = tmp
 
-def draw():
-	"Draw the baord."
-	global boards
+	def tick(self):
+		"Do the work!"
+		swap()
+				
+		for y in range(self.maxRows):
+			for x in range(self.maxColumns):
+				liveCount = 0
 
-	for y in range(MAX_ROWS):
-		for x in range(MAX_COLUMNS):
-			print( ' ' if boards[DRAW_BOARD][y*MAX_COLUMNS + x] == 0 else 'X', end='')
-			#print('(x, y, v) (', x, ',', y, ',', boards[DRAW_BOARD][y*MAX_COLUMNS + x], ')')
-		print('')
-	print( ''.join(['-' for x in range(MAX_COLUMNS)]) )
+				pos = (y-1)*self.maxColumns + (x-1)
+				if pos >= 0 and pos < len(self.boards[BUFFER_BOARD]) and x-1 >= 0 and y-1 >= 0:
+					liveCount += self.boards[BUFFER_BOARD][pos]
+				pos = (y-1)*self.maxColumns + x
+				if pos >= 0 and pos < len(self.boards[BUFFER_BOARD]) and y-1 >= 0:
+					liveCount += self.boards[BUFFER_BOARD][pos]
+				pos = (y-1)*self.maxColumns + (x+1)
+				if pos >= 0 and pos < len(self.boards[BUFFER_BOARD]) and y-1 >= 0 and x+1 < self.maxColumns:
+					liveCount += self.boards[BUFFER_BOARD][pos]
+				
+				pos = y*self.maxColumns + (x-1)
+				if pos >= 0 and pos < len(self.boards[BUFFER_BOARD]) and x-1 >= 0:
+					liveCount += self.boards[BUFFER_BOARD][pos]
+				pos = y*self.maxColumns + (x+1)
+				if pos >= 0 and pos < len(self.boards[BUFFER_BOARD]) and x+1 < self.maxColumns:
+					liveCount += self.boards[BUFFER_BOARD][pos]
+				
+				pos = (y+1)*self.maxColumns + (x-1)
+				if pos >= 0 and pos < len(self.boards[BUFFER_BOARD]) and y+1 < self.maxRows and x-1 >= 0:
+					liveCount += self.boards[BUFFER_BOARD][pos]
+				pos = (y+1)*self.maxColumns + x
+				if pos >= 0 and pos < len(self.boards[BUFFER_BOARD]) and y+1 < self.maxRows:
+					liveCount += self.boards[BUFFER_BOARD][pos]
+				pos = (y+1)*self.maxColumns + (x+1)
+				if pos >= 0 and pos < len(self.boards[BUFFER_BOARD]) and y+1 < self.maxRows and x+1 < self.maxColumns:
+					liveCount += self.boards[BUFFER_BOARD][pos]
 
-def tick():
-	"Do the work!"
-	global boards
-	swap()
-            
-	for y in range(MAX_ROWS):
-		for x in range(MAX_COLUMNS):
-			liveCount = 0
-
-			pos = (y-1)*MAX_COLUMNS + (x-1)
-			if pos >= 0 and pos < len(boards[BUFFER_BOARD]) and x-1 >= 0 and y-1 >= 0:
-				liveCount += boards[BUFFER_BOARD][pos]
-			pos = (y-1)*MAX_COLUMNS + x
-			if pos >= 0 and pos < len(boards[BUFFER_BOARD]) and y-1 >= 0:
-				liveCount += boards[BUFFER_BOARD][pos]
-			pos = (y-1)*MAX_COLUMNS + (x+1)
-			if pos >= 0 and pos < len(boards[BUFFER_BOARD]) and y-1 >= 0 and x+1 < MAX_COLUMNS:
-				liveCount += boards[BUFFER_BOARD][pos]
-			
-			pos = y*MAX_COLUMNS + (x-1)
-			if pos >= 0 and pos < len(boards[BUFFER_BOARD]) and x-1 >= 0:
-				liveCount += boards[BUFFER_BOARD][pos]
-			pos = y*MAX_COLUMNS + (x+1)
-			if pos >= 0 and pos < len(boards[BUFFER_BOARD]) and x+1 < MAX_COLUMNS:
-				liveCount += boards[BUFFER_BOARD][pos]
-			
-			pos = (y+1)*MAX_COLUMNS + (x-1)
-			if pos >= 0 and pos < len(boards[BUFFER_BOARD]) and y+1 < MAX_ROWS and x-1 >= 0:
-				liveCount += boards[BUFFER_BOARD][pos]
-			pos = (y+1)*MAX_COLUMNS + x
-			if pos >= 0 and pos < len(boards[BUFFER_BOARD]) and y+1 < MAX_ROWS:
-				liveCount += boards[BUFFER_BOARD][pos]
-			pos = (y+1)*MAX_COLUMNS + (x+1)
-			if pos >= 0 and pos < len(boards[BUFFER_BOARD]) and y+1 < MAX_ROWS and x+1 < MAX_COLUMNS:
-				liveCount += boards[BUFFER_BOARD][pos]
-
-			value = boards[BUFFER_BOARD][y*MAX_COLUMNS + x]
-			if value == LIVE:
-				if (liveCount < UNDERPOPULATION) or (liveCount > OVERPOPULATION):
-					boards[DRAW_BOARD][y*MAX_COLUMNS + x] = DEAD
+				value = self.boards[BUFFER_BOARD][y*self.maxColumns + x]
+				if value == LIVE:
+					if (liveCount < UNDERPOPULATION) or (liveCount > OVERPOPULATION):
+						self.boards[DRAW_BOARD][y*self.maxColumns + x] = DEAD
+					else:
+						#Remain alive
+						self.boards[DRAW_BOARD][y*self.maxColumns + x] = LIVE
 				else:
-					#Remain alive
-					boards[DRAW_BOARD][y*MAX_COLUMNS + x] = LIVE
-			else:
-				if liveCount == REPRODUCTION:
-					boards[DRAW_BOARD][y*MAX_COLUMNS + x] = LIVE
-				else:
-					#remain dead
-					boards[DRAW_BOARD][y*MAX_COLUMNS + x] = DEAD
+					if liveCount == REPRODUCTION:
+						self.boards[DRAW_BOARD][y*self.maxColumns + x] = LIVE
+					else:
+						#remain dead
+						self.boards[DRAW_BOARD][y*self.maxColumns + x] = DEAD
 
-while True:
-	#print(boards[0])
-	draw()
-	tick()
-	sleep(0.5)
+	def getBoard(self):
+		return self.boards[DRAW_BOARD]
