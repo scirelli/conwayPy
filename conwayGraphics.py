@@ -19,6 +19,7 @@ GRID_COLOR	 = GRAY
 
 screen = pygame.display.set_mode(SCREEN_SIZE)
 pygame.display.set_caption("Conway's Game of Life")
+conwayGame = Conway(COLUMNS, ROWS)
 
 # Loop until the user clicks the close button.
 done = False
@@ -31,7 +32,7 @@ key = {
 }
 
 def drawGrid(pygame, screen):
-	"This should drawt he grid lines on the screen"
+	"Draws the grid lines on the screen"
 	LINE_WIDTH = 1
 	offsetX = CELL_WIDTH
 	offsetY = CELL_HEIGHT
@@ -42,6 +43,23 @@ def drawGrid(pygame, screen):
 	for row in range(1, ROWS):
 		pygame.draw.line(screen, GRID_COLOR, [0, offsetY], [SCREEN_SIZE[0], offsetY], LINE_WIDTH)
 		offsetY += CELL_HEIGHT
+
+def drawBoard(pygame, screen, conwayGame):
+	"Draw the  board"
+	BORDER_WIDTH = 0
+	offsetX = 0
+	offsetY = 0
+	color = BLACK
+	for y in range(ROWS):
+		for x in range(COLUMNS):
+			if(conwayGame.getCell(x, y) == 0):
+				color = BLACK
+			else:
+				color = WHITE
+			
+			offsetX = x*CELL_WIDTH
+			offsetY = y*CELL_HEIGHT
+			pygame.draw.rect(screen, color, [0+offsetX, 0+offsetY, CELL_WIDTH+offsetX, CELL_HEIGHT+offsetY], BORDER_WIDTH)
 
 # -------- Main Program Loop -----------
 while not done:
@@ -55,9 +73,10 @@ while not done:
 				done = True
 
 	# --- Game logic should go here
-
+	conwayGame.tick()
 	# --- Drawing code should go here
-	drawGrid(pygame, screen) 
+	drawBoard(pygame, screen, conwayGame)
+	drawGrid(pygame, screen)
 
 	# --- Go ahead and update the screen with what we've drawn.
 	pygame.display.flip()
@@ -67,4 +86,4 @@ while not done:
 	screen.fill(BLACK)
 
 	# --- Limit to 60 frames per second
-	clock.tick(60)
+	clock.tick(10)
