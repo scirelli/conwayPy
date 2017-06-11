@@ -1,5 +1,7 @@
 # conwayPy
-Conway's game of live in Python.
+Conway's game of life in Python.
+
+Requires python 3.
 
 ## Installation
 Install [pygame](http://www.pygame.org/wiki/GettingStarted#Pygame%20Installation)
